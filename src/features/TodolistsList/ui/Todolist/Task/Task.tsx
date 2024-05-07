@@ -6,6 +6,7 @@ import { TaskStatuses } from "common/enums/index";
 import {TaskType} from "../../../api/tasksApi.types";
 import {useActions} from "../../../../../common/hooks/index";
 import {tasksThunks} from "../../../model/tasks/tasks.reducer";
+import s from "./Task.module.css"
 
 type TaskPropsType = {
   task: TaskType;
@@ -39,7 +40,7 @@ const {removeTask, updateTask } = useActions(tasksThunks)
   }
 
   return (
-    <div key={props.task.id} className={props.task.status === TaskStatuses.Completed ? "is-done" : ""}>
+    <div key={props.task.id} className={props.task.status === TaskStatuses.Completed ? s.isDone : ""}>
       <Checkbox checked={props.task.status === TaskStatuses.Completed} color="primary" onChange={onChangeStatusHandler} />
 
       <EditableSpan value={props.task.title} onChange={changeTaskTitleHandler} />
