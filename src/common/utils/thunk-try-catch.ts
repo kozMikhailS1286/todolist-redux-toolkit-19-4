@@ -1,7 +1,7 @@
 import { AppDispatch, AppRootStateType } from "app/store";
 import { handleServerNetworkError } from "common/utils/handle-server-network-error";
 import { BaseThunkAPI } from "@reduxjs/toolkit/dist/createAsyncThunk";
-import { appActions } from "app/app.reducer";
+import { appActions } from "app/appSlice";
 import { BaseResponseType } from "common/types";
 
 export const thunkTryCatch = async <T>(
@@ -9,7 +9,8 @@ export const thunkTryCatch = async <T>(
   logic: () => Promise<T>,
 ): Promise<T | ReturnType<typeof thunkAPI.rejectWithValue>> => {
   const { dispatch, rejectWithValue } = thunkAPI;
-  dispatch(appActions.setAppStatus({ status: "loading" }));
+  // dispatch(appActions.setAppStatus({ status: "loading" }));
+    //  убрали, т.к. это теперь обрабатывается в builder.addMatcher в appSlice
   try {
     return await logic();
   } catch (e) {

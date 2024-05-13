@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import {createSlice, PayloadAction, UnknownAction} from "@reduxjs/toolkit";
 
 const initialState = {
   status: "idle" as RequestStatusType,
@@ -23,7 +23,15 @@ const slice = createSlice({
       state.isInitialized = action.payload.isInitialized;
     },
   },
+    extraReducers: (builder) => {
+      builder.addMatcher((action: UnknownAction) => {
+              return action.type.endsWith('/pending');
+          },
+          (state, action) => {
+              state.status = "loading"
+          })
+    }
 });
 
-export const appReducer = slice.reducer;
+export const appSlice = slice.reducer;
 export const appActions = slice.actions;
