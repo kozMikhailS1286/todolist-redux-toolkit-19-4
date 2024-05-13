@@ -30,6 +30,18 @@ const slice = createSlice({
           (state, action) => {
               state.status = "loading"
           })
+      builder.addMatcher((action: UnknownAction) => {
+          return action.type.endsWith('/rejected');
+      },
+          (state, action) => {
+          state.status = "failed"
+      })
+      builder.addMatcher((action: UnknownAction) => {
+          return action.type.endsWith('/fulfilled');
+      },
+          (state, action) => {
+          state.status = "succeeded"
+      })
     }
 });
 
