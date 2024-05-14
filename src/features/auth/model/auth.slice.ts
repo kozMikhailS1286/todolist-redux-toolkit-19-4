@@ -65,7 +65,6 @@ const slice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder.addCase(captcha.fulfilled, (state, action) => {
-            console.log(action)
             state.captcha = action.payload.url
         })
         // builder
@@ -101,4 +100,6 @@ const slice = createSlice({
 });
 
 export const authSlice = slice.reducer;
+
+export const authActions = slice.actions
 export const authThunks = {login, logout, initializeApp };
