@@ -8,12 +8,12 @@ import {useActions} from "../../../../../../common/hooks/index";
 import {tasksThunks} from "../../../../model/tasks/tasks.reducer";
 import s from "./Task.module.css"
 
-type TaskPropsType = {
+type Props = {
   task: TaskType;
   todolistId: string;
 };
 
-export const Task = React.memo((props: TaskPropsType) => {
+export const Task = React.memo((props: Props) => {
 
 const {removeTask, updateTask } = useActions(tasksThunks)
 
