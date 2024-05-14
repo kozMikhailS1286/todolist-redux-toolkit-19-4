@@ -9,7 +9,7 @@ type FormikErrorType = Partial<Omit<LoginParamsType, "captcha">>;
 export const useLogin = () => {
     const { login } = useActions(authThunks);
 
-    const formik = useFormik({
+    const formik = useFormik<LoginParamsType>({
         validate: (values) => {
             const errors: FormikErrorType = {};
             if (!values.email) {
@@ -30,6 +30,7 @@ export const useLogin = () => {
             email: "",
             password: "",
             rememberMe: false,
+            captcha: " "
         },
         onSubmit: (values, formikHelpers: FormikHelpers<LoginParamsType>) => {
             login(values)

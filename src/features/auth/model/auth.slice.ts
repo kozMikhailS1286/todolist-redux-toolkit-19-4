@@ -1,23 +1,30 @@
-import {createSlice, isAnyOf, PayloadAction, UnknownAction} from "@reduxjs/toolkit";
+import {createSlice, isAnyOf, PayloadAction} from "@reduxjs/toolkit";
 import {appActions} from "app/appSlice";
 import {authAPI, LoginParamsType} from "features/auth/api/auth.api";
 import {clearTasksAndTodolists} from "common/actions";
 import {createAppAsyncThunk, handleServerAppError, thunkTryCatch} from "common/utils";
 import {ResultCode} from "common/enums";
 
-const login = createAppAsyncThunk<{ isLoggedIn: boolean }, LoginParamsType>("auth/login", async (arg, thunkAPI) => {
+const login = createAppAsyncThunk<any, LoginParamsType>("auth/login", async (arg, thunkAPI) => {
     const {dispatch, rejectWithValue} = thunkAPI;
-    return thunkTryCatch(thunkAPI, async () => {
         const res = await authAPI.login(arg);
         if (res.data.resultCode === ResultCode.Success) {
             return {isLoggedIn: true};
+        } else if (res.data.resultCode === 10) {
+            return dispatch(captcha())
         } else {
             const isShowAppError = !res.data.fieldsErrors.length;
             handleServerAppError(res.data, dispatch, isShowAppError);
             return rejectWithValue(res.data);
         }
-    });
 });
+
+
+const captcha = createAppAsyncThunk("app/getCaptcha", async () => {
+        const res = await authAPI.getCaptchaUrl();
+        return res
+})
+
 
 const logout = createAppAsyncThunk<{ isLoggedIn: boolean }, void>("auth/logout", async (_, thunkAPI) => {
     const {dispatch, rejectWithValue} = thunkAPI;
@@ -47,13 +54,20 @@ const initializeApp = createAppAsyncThunk<{ isLoggedIn: boolean }, void>("app/in
     });
 });
 
+
+
 const slice = createSlice({
     name: "auth",
     initialState: {
         isLoggedIn: false,
+        captcha: " "
     },
     reducers: {},
     extraReducers: (builder) => {
+        builder.addCase(captcha.fulfilled, (state, action) => {
+            console.log(action)
+            state.captcha = action.payload.url
+        })
         // builder
         // .addCase(login.fulfilled, (state, action) => {
         //   state.isLoggedIn = action.payload.isLoggedIn;
@@ -87,4 +101,4 @@ const slice = createSlice({
 });
 
 export const authSlice = slice.reducer;
-export const authThunks = {login, logout, initializeApp};
+export const authThunks = {login, logout, initializeApp };

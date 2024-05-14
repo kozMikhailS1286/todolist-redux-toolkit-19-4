@@ -2,12 +2,15 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
 import { Button, Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, Grid, TextField } from "@mui/material";
-import { selectIsLoggedIn } from "features/auth/model/auth.selectors";
+import {captcha, selectIsLoggedIn} from "features/auth/model/auth.selectors";
 import s from "features/auth/ui/login/login.module.css";
 import {useLogin} from "../../lib/useLogin";
 
 
 export const Login = () => {
+
+  const captchaUrl = useSelector(captcha)
+
   const { formik } = useLogin();
 
   const isLoggedIn = useSelector(selectIsLoggedIn);
@@ -41,6 +44,9 @@ export const Login = () => {
                 label={"Remember me"}
                 control={<Checkbox {...formik.getFieldProps("rememberMe")} checked={formik.values.rememberMe} />}
               />
+                {captchaUrl && <img src={captchaUrl}/>}
+                {captchaUrl &&
+                    <TextField type="captcha" label="Captcha" {...formik.getFieldProps("captcha")} />}
               <Button
                 type={"submit"}
                 variant={"contained"}

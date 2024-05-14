@@ -11,6 +11,12 @@ export const authAPI = {
   me() {
     return instance.get<BaseResponseType<{ id: number; email: string; login: string }>>("auth/me");
   },
+  getCaptchaUrl() {
+      return instance.get(`security/get-captcha-url`, )
+          .then((res) => {
+              return res.data
+          })
+  }
 };
 
 export type LoginParamsType = {
